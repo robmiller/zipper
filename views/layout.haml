@@ -4,7 +4,13 @@
     %meta{:charset => "utf-8"}
     %title Zip passworder
 
-  %body
-    %h1 Zip passworder
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
 
-    = yield
+    %link{:rel => "stylesheet", :href => url("/css/bootstrap.css")}
+    %link{:rel => "stylesheet", :href => url("/css/bootstrap-responsive.css")}
+  %body
+    %div.container-fluid
+
+      %h1 Zip passworder
+
+      = yield
