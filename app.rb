@@ -46,9 +46,11 @@ post '/upload' do
 end
 
 get '/download/:hash/:filename' do |hash, filename|
-  content_type "application/zip"
   file = File.join("tmp", hash.gsub(/[^a-f0-9]/, ''), filename.gsub('..', ''))
-  exit unless File.exists?(file)
+
+  return haml :error unless File.exists?(file)
+
+  content_type "application/zip"
   File.read(file)
 end
 
