@@ -1,0 +1,6 @@
+%form{:method => :post, :action => "/upload", :enctype => "multipart/form-data"}
+  %p
+    %input{:type => :file, :name => "zip-file", :required => true, :accept => "application/zip"}
+
+  %p
+    %input{:type => :submit, :value => "Upload zip file!"}
