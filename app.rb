@@ -11,6 +11,8 @@ get '/' do
 end
 
 post '/upload' do
+  return haml :error unless params['zip-file'][:type] == 'application/zip'
+
   hash = Digest::SHA256.file(params['zip-file'][:tempfile]).hexdigest
   dir = File.join('tmp', hash)
   output_dir = File.join(dir, 'output')
