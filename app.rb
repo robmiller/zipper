@@ -38,6 +38,7 @@ post '/upload' do
   )
 
   FileUtils.rm_rf(output_dir)
+  File.unlink(params['zip-file'][:tempfile]) if File.exists?(params['zip-file'][:tempfile])
 
   @download_link = "download/#{hash}/#{params['zip-file'][:filename]}"
 
