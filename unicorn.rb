@@ -3,7 +3,7 @@ working_directory "/sites/zipper.bigfish.co.uk"
 
 preload_app true
 
-timeout 30
+timeout 500
 
 listen "/tmp/zipper.sock", :backlog => 64
 
