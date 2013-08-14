@@ -61,9 +61,9 @@ get '/download/:hash/:filename' do |hash, filename|
 end
 
 def generate_password
-  charset = "abcdefghijklmnopqrstuvwxyz1234567890"
+  charset = "abcdefghijklmnopqrstuvwxyz"
   password = ""
-  16.times { password += charset[rand(charset.length)] }
+  6.times { password += charset[rand(charset.length)] }
 
   password
 end
