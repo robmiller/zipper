@@ -25,7 +25,13 @@ post '/upload' do
     file.write(params['zip-file'][:tempfile].read)
   end
 
-  Archive::Zip.extract(zip_file, output_dir)
+  begin
+    Archive::Zip.extract(zip_file, output_dir)
+  rescue Zlib::DataError => e
+    @error_message = e.message
+    return haml :error
+  end
+
   File.unlink(zip_file)
 
   @password = generate_password

@@ -1,4 +1,9 @@
 %p Oops, something went wrong.
 
+- if @error_message
+  %p
+    The message I got was:
+    = @error_message
+
 %p
   %a(href="/") Why not try again?
