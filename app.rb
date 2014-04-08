@@ -1,5 +1,8 @@
-require 'bundler'
-Bundler.require
+require 'bundler/setup'
+
+require 'sinatra'
+require 'haml'
+require 'archive/zip'
 
 require 'digest'
 require 'archive/zip/codec/traditional_encryption'
