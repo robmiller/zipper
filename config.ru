@@ -1,3 +1,7 @@
 require './app'
 
-run Sinatra::Application
+require 'raven'
+
+Raven.capture do
+  run Sinatra::Application
+end
