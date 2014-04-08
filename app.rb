@@ -3,9 +3,13 @@ require 'bundler/setup'
 require 'sinatra'
 require 'haml'
 
+require_relative "helpers/raven"
+
 require_relative "lib/zipper"
 
 set :haml, :format => :html5, :layout => :layout
+
+helpers Helpers
 
 get '/' do
   haml :index
@@ -15,7 +19,7 @@ post '/upload' do
   begin
     uploader = Zipper::Uploader.new(params['zip-file'])
     uploader.process
-  rescue
+  rescue Zipper::ZipperError
     return haml :error
   end
 
@@ -36,3 +40,7 @@ get '/download/:hash/:filename' do |hash, filename|
   end
 end
 
+error do
+  capture_exception env['sinatra.error'], env
+  { message: env['sinatra.error'].message }.to_json
+end
