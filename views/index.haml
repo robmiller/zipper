@@ -1,12 +1,25 @@
 .uploader
-  .span4
-    %p
-      Upload a zip file here and it will be magically converted into a password-protected version.
+  .blurb.row
+    .span4
+      %p Upload a plain old zip file here (like you’d get by right clicking some files in Finder and selecting “Compress”), and you’ll get back a password-protected version.
 
-  .span8
-  %form{:method => :post, :action => "/upload", :enctype => "multipart/form-data"}
-    %p
-      %input{:type => :file, :name => "zip-file", :required => true, :accept => "application/zip"}
+      %p This allows you to send sensitive data (consumers’ email addresses, onpack codes, prize draw entrants, etc.) outside of the company.
 
-    %p
-      %input{:type => :submit, :value => "Upload zip file!"}
+  .form.row
+    .span6
+      %h2 Upload:
+
+      %form{:method => :post, :action => "/upload", :enctype => "multipart/form-data"}
+        .control-group
+          %label.control-label{:for => "zip-file"} Choose your zip file:
+          .controls
+            %p
+              %input#zip-file{:type => :file, :name => "zip-file", :required => true, :accept => "application/zip"}
+            .help-block
+              %code .zip
+              files only please. Maximum size: 128MB
+
+        .control-group.submit
+          .controls
+            %p
+              %input.btn.btn-primary{:type => :submit, :value => "Upload!"}
