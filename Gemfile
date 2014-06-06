@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'sinatra', '~> 1.4.3'
 gem 'haml', '~> 4.0.3'
 
+gem 'dotenv', '~> 0.11.1'
 gem 'pry', '~> 0.9.12'
 
 gem 'escape', '~> 0.0.4'
