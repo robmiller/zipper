@@ -19,7 +19,8 @@ post '/upload' do
   begin
     uploader = Zipper::Uploader.new(params['zip-file'])
     uploader.process
-  rescue Zipper::ZipperError
+  rescue Zipper::ZipperError => e
+    @error_message = e.message
     return haml :error
   end
 

@@ -6,7 +6,7 @@ module Zipper
     end
 
     def filename
-      File.join("tmp", hash.gsub(/[^a-f0-9]/, ''), filename.gsub('..', ''))
+      File.join("tmp", @hash.gsub(/[^a-f0-9]/, ''), @filename.gsub('..', ''))
     end
   end
 end

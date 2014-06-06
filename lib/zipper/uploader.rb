@@ -1,9 +1,12 @@
-require 'archive/zip'
 require 'digest'
-require 'archive/zip/codec/traditional_encryption'
+require 'escape'
+
+require 'pry'
 
 module Zipper
   class InvalidFileTypeError < ZipperError; end
+  class ExtractionError < ZipperError; end
+  class CompressionError < ZipperError; end
 
   class Uploader
     def initialize(file)
@@ -37,7 +40,7 @@ module Zipper
     end
 
     def dir
-      File.join('tmp', hash)
+      File.join(Dir.pwd, 'tmp', hash)
     end
 
     def output_dir
@@ -45,12 +48,14 @@ module Zipper
     end
 
     def zip_file
-      File.join(dir, @file[:filename])
+      @zip_file ||= File.join(dir, @file[:filename].gsub(/\.\.|\//, ''))
     end
 
     def make_directories
-      Dir.mkdir(dir) unless Dir.exists?(dir)
-      Dir.mkdir(output_dir) unless Dir.exists?(output_dir)
+      [dir, output_dir].each do |d|
+        FileUtils.rm_rf(d) if File.exist?(d)
+        FileUtils.mkdir_p(d)
+      end
     end
 
     def store_upload
@@ -60,23 +65,21 @@ module Zipper
     end
 
     def extract
-      begin
-        Archive::Zip.extract(zip_file, output_dir)
-      rescue Zlib::DataError => e
-        @error_message = e.message
-        return haml :error
+      system(p Escape.shell_command(["unzip", "#{zip_file}", "-d", "#{output_dir}/"]))
+      if $?.exitstatus != 0
+        fail ExtractionError.new("I couldn't extract the zip file. Are you sure it's valid? Try testing on your local machine.")
       end
 
       File.unlink(zip_file)
     end
 
     def rearchive
-      Archive::Zip.archive(
-        zip_file,
-        "#{output_dir}/.",
-        :encryption_codec => Archive::Zip::Codec::TraditionalEncryption,
-        :password => password.to_s
-      )
+      system(Escape.shell_command(["cd", output_dir]) + " && " + Escape.shell_command(["zip", "-r", "-P", password.to_s, zip_file]) + " *")
+      if $?.exitstatus != 0
+        fail CompressionError.new("I couldn't create the passworded zip file for some reason.")
+      end
+
+      true
     end
 
     def cleanup
