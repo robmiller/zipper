@@ -22,6 +22,11 @@ module Zipper
       store_upload
       extract
       rearchive
+
+      if S3.enabled?
+        upload_to_s3
+      end
+
       cleanup
     end
 
@@ -30,7 +35,11 @@ module Zipper
     end
 
     def download_link
-      @download_link ||= "download/#{hash}/#{@file[:filename]}"
+      @download_link ||= if S3.enabled?
+                           S3.find(hash + ".zip").public_url
+                         else
+                           "download/#{hash}/#{@file[:filename]}"
+                         end
     end
 
     private
@@ -80,6 +89,10 @@ module Zipper
       end
 
       true
+    end
+
+    def upload_to_s3
+      S3.store(hash + ".zip", open(zip_file))
     end
 
     def cleanup
