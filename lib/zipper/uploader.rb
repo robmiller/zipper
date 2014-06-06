@@ -93,6 +93,7 @@ module Zipper
 
     def upload_to_s3
       S3.store(hash + ".zip", open(zip_file))
+      FileUtils.rm_rf(dir)
     end
 
     def cleanup
