@@ -36,7 +36,7 @@ module Zipper
 
     def download_link
       @download_link ||= if S3.enabled?
-                           S3.find(hash + ".zip").public_url
+                           S3.find(File.basename(zip_file)).url_for(:get, expires: Time.now + 86400, secure: true).to_s
                          else
                            "download/#{hash}/#{@file[:filename]}"
                          end
@@ -92,12 +92,16 @@ module Zipper
     end
 
     def upload_to_s3
-      S3.store(hash + ".zip", open(zip_file))
-      FileUtils.rm_rf(dir)
+      S3.store(File.basename(zip_file), open(zip_file))
     end
 
     def cleanup
-      FileUtils.rm_rf(output_dir)
+      if S3.enabled?
+        FileUtils.rm_rf(dir)
+      else
+        FileUtils.rm_rf(output_dir)
+      end
+
       File.unlink(@file[:tempfile]) if File.exists?(@file[:tempfile])
     end
   end
